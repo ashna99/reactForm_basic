@@ -1,0 +1,9 @@
+.default{
+    font-size: 0.8rem;
+    border: 1px solid black;
+    margin:0rem 1rem;
+    padding:0.2rem
+}
+label{
+    font-weight:550;
+}

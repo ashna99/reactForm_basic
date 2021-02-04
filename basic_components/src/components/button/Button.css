@@ -1,0 +1,32 @@
+.button{
+    
+     border: none;
+     color:white;
+     font-size: 0.9rem;
+     text-decoration: none;
+     padding: 0.4rem 0.5rem;
+     margin:0.8rem;
+     border-radius: 0.7rem;
+     text-align:center;
+     cursor:pointer;
+    
+}
+
+.primary{
+    background-color: darkslateblue ;
+
+}
+.secondary{
+    background-color: rgb(4, 102, 4);
+}
+.success{ background-color: yellowgreen;}
+.danger{background-color: red;}
+.white{
+    color:white
+}
+.black{
+    color:black
+}
+.disabled{
+    opacity:0.5
+}

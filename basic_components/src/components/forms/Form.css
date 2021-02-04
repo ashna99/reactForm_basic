@@ -1,0 +1,39 @@
+.container-fluid{
+    width: 100%;
+    padding: 0px;
+    margin:1rem;
+    display:flex;
+    justify-content: center;
+    /* flex-direction: column; */
+}
+.container{
+    width:100%;
+     margin: 2rem;
+}
+.grid{
+    display: grid;
+}
+.row{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+h1,h2,h3,h4,h5{
+    margin:2rem 0.1rem
+}
+.form{
+    border:0.1rem solid black;
+    padding:1.2rem 4rem;
+}
+.flex-end{
+    justify-self: flex-end;
+}
+.col{
+    align-self: center;
+    margin: 2rem;
+}
+.flex{
+    display: flex;
+}
