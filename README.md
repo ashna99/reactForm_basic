@@ -1,4 +1,4 @@
 # reactForm_basic
-Run following commands to execute project:
+Execute following commands to run the project:
 1. cd basic_components
 2. npm run
