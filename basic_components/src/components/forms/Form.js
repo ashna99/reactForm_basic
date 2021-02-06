@@ -19,18 +19,19 @@ function Form({name}) {
 
 ///use state not working
 const countRows=useRef(0);
-const formRef=useRef(null)
+const formRef=useRef(null);
+
 const refRow=useRef(null);
 const [labResults,setLabResults]=useState(new Map());
 const keys=useRef(new Set(['ECG','Glucose','CBC']));
-const deletedKeys=useRef([]);
+const deleteKeys=useRef([]);
 
  
 ///one time initialisation when component is mounted
  useEffect(()=>{
      
-     console.log(countRows.current);
      let backButton = formRef.current.children[2].children[0];
+     console.log(countRows.current);
      backButton.disabled = true;
      backButton.style.opacity = 0.5; 
      let submitButton = formRef.current.children[2].children[1];
@@ -42,7 +43,32 @@ const deletedKeys=useRef([]);
 
 //////////////////////////
 const submitHandler=(e)=>{
-   console.log(e.target);  
+   console.log(e.target);
+   //reinitializing values after submission
+   deleteKeys.current.splice(0,deleteKeys.current.length);
+   console.log(deleteKeys);
+   select1.values.forEach((value)=>{
+       keys.current.add(value);
+   })
+     setTests([{...select1},{...select2}]);
+     console.log(keys.current,tests);
+     let tempRes=labResults;
+     tempRes.clear();
+     setLabResults(tempRes);
+     console.log(labResults);
+   
+     //activating save button to add new form and deactivating back button 
+    let lastRowElements = formRef.current.children[2].children;
+    let refRowElements = refRow.current.children;
+    var l = refRowElements.length;
+    refRowElements[l - 1].disabled = false; //save button
+    refRowElements[l - 1].style.opacity = 1;
+    let backButton = lastRowElements[0];
+    backButton.disabled = true;
+    backButton.style.opacity = 0.5; 
+    //deactivating submit button
+    e.target.disabled=true;
+    e.target.style.opacity=0.5;
 }
 /////////////////////////////////
 const saveHandler=(e)=>{ 
@@ -53,7 +79,7 @@ console.log(e.target);
 ///////////////////////////////
 const eventBubbling=(e)=>{
    
-  if(e.target.type=='submit'){
+  if(e.target.type==='submit'){
       console.log(e.currentTarget.children);
       //initially when there were multiple rows ref was changed based on target
      // refRow.current = e.currentTarget;
@@ -61,12 +87,12 @@ const eventBubbling=(e)=>{
       var l = rowElements.length;
       let selectedTest = rowElements[2].value;
       let selectedUnit=rowElements[5].value;
-      let defaultValue='Select';
+   //   let defaultValue='Select';
       let selectedValue=rowElements[l-2].value;
      
-      if (selectedTest != defaultValue && selectedUnit != defaultValue && selectedValue.trim() != '') {
-
-         deletedKeys.current.push(selectedTest);
+  //    if (selectedTest !== defaultValue && selectedUnit !== defaultValue && selectedValue.trim() !== '') {
+      if (selectedValue.trim() !== ''){
+         deleteKeys.current.push(selectedTest);
          keys.current.delete(selectedTest);
          console.log(keys.current);
       
@@ -87,7 +113,7 @@ const eventBubbling=(e)=>{
           console.log(countRows.current )
          countRows.current= rowElements[2].children.length-1;
           console.log(e.target)
-          if(countRows.current==0){
+          if(countRows.current===0){
               e.target.disabled=true;
               e.target.style.opacity='0.5';
               let submitButton=formRef.current.children[2].children[1];
@@ -99,7 +125,7 @@ const eventBubbling=(e)=>{
               backButton.disabled=false;
               backButton.style.opacity=1;
           }
-      }
+    }
       else{
           alert('invalid entry');
       }
@@ -115,12 +141,16 @@ const backHandler=(e)=>{
    // setCountRows((prevCount)=>(prevCount-1));
    countRows.current+=1;
     console.log(countRows.current);
-    let deletedKey = deletedKeys.current.pop();
+    let deletedKey = deleteKeys.current.pop();
         keys.current.add(deletedKey);
-        setLabResults((prevLabResults)=>(prevLabResults.delete(deletedKey)));
-        console.log(labResults.keys());
+        ///error here is  returning true and false value
+        let tempRes=labResults;
+        tempRes.delete(deletedKey);
+        setLabResults(tempRes);
+        ///labResults.keys() was giving error as it's returning iterable object not an array
+        console.log(Array.from(labResults.keys()));
         console.log(keys.current);
-        console.log(deletedKeys.current);
+        console.log(deleteKeys.current);
     setTests(([select1, select2]) => (
         [select1 = {
             name: 'Tested Biomarker',
@@ -134,7 +164,7 @@ const backHandler=(e)=>{
     let refRowElements = refRow.current.children;
     let submitButton = lastRowElements[1];
     var l = refRowElements.length;
-    if (countRows.current == 3) {
+    if (countRows.current === 3) {
         let backButton = lastRowElements[0];
         backButton.disabled = true;
         backButton.style.opacity = 0.5; 
@@ -146,7 +176,7 @@ const backHandler=(e)=>{
         submitButton.disabled=true;
         submitButton.style.opacity=0.5;
     }
-    else if(countRows==0){
+    else if(countRows===0){
         submitButton.disabled=false;
         submitButton.style.opacity=1;
     }
@@ -181,20 +211,20 @@ const backHandler=(e)=>{
             </div>
             
         </div>
-        {/* <div  id='logged-values' >
-                <p className='container' >
+        <div  id='logged-values' >
+                <div className='container' >
                     <b>{`Logged values:`}</b>
                 {
                  (labResults.size!==0) ?  ( Array.from(labResults.keys()).map((key)=>(
                         <>                      
-                        <p >{`${key}: value= ${labResults.get(key).value} ${labResults.get(key).unit}`}</p>
+                        <p key={key}>{`${key}: value= ${labResults.get(key).value} ${labResults.get(key).unit}`}</p>
                         
                         </>
                         ))
                  ):(<></>)
                 }
-             </p>
-        </div> */}
+             </div>
+        </div>
         </>
     )
 }
